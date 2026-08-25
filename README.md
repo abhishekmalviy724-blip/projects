@@ -1,3 +1,16 @@
+text = input("Enter a word: ")
+
+frequency = {}
+
+for char in text:
+    frequency[char] = frequency.get(char, 0) + 1
+
+for char, count in frequency.items():
+    print(char, ":", count)
+
+
+
+
 def largest_word(sentence):
     words = sentence.split()
     largest = words[0]
