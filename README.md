@@ -1,6 +1,21 @@
 numbers = list(map(int, input("Enter numbers: ").split()))
 
 for i in range(len(numbers)):
+    count = 0
+
+    for j in range(len(numbers)):
+        if numbers[i] == numbers[j]:
+            count += 1
+
+    if count == 1:
+        print("First unique number:", numbers[i])
+        break
+
+
+
+numbers = list(map(int, input("Enter numbers: ").split()))
+
+for i in range(len(numbers)):
     for j in range(i + 1, len(numbers)):
         if numbers[i] > numbers[j]:
             numbers[i], numbers[j] = numbers[j], numbers[i]
