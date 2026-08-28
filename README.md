@@ -1,3 +1,43 @@
+def LMS(Book,User_Name,User_Id,Status):
+    Books = ["Python", "SQL", "Machine Learning", "Excel"]
+    Boosk = {"B101" :{
+        "Name":"python",
+        "Author":"Gito",
+        "status":"Av"
+    }}
+    User = {"Abhishek","Rahul","Sanvi","Mahi"}
+    Category = {"programming","Database","AI","PHP"}
+    Library_config = ("Central Library", 5)
+    while True:
+        print("\n1. Book")
+        print("2. User Name")
+        print("3. User ID") 
+        print("4. Status")
+        print("5. Exit")
+        
+        choice = int(input("Enter Choice!"))
+        if choice == 1:
+                print (Book)
+        elif choice == 2:
+                print(User_Name)
+        elif choice == 3:
+                print(User_Id)
+        elif choice == 4:
+                print(Status)
+        elif choice == 5:
+            print("Thank You!")
+            break
+        else:
+            print("Invalid Choice")
+    
+        
+obj=LMS(["A","B",""],"Abhihek","763URYB","Active")
+
+
+
+
+
+
 numbers = list(map(int, input("Enter numbers: ").split()))
 
 for i in range(len(numbers)):
