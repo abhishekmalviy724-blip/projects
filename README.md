@@ -1,3 +1,21 @@
+numbers = list(map(int, input("Enter numbers: ").split()))
+
+duplicates = []
+
+for i in range(len(numbers)):
+    count = 0
+
+    for j in range(len(numbers)):
+        if numbers[i] == numbers[j]:
+            count += 1
+
+    if count > 1 and numbers[i] not in duplicates:
+        duplicates.append(numbers[i])
+
+print("Duplicate numbers:", duplicates)
+
+
+
 def LMS(Book,User_Name,User_Id,Status):
     Books = ["Python", "SQL", "Machine Learning", "Excel"]
     Boosk = {"B101" :{
