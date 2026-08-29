@@ -1,3 +1,16 @@
+text = input("Enter a sentence: ")
+
+words = text.lower().split()
+longest = ""
+
+for word in words:
+    if len(word) > len(longest):
+        longest = word
+
+print("Longest word:", longest)
+print("Length:", len(longest))
+
+
 numbers = list(map(int, input("Enter numbers: ").split()))
 
 duplicates = []
