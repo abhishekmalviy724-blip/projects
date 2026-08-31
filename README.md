@@ -1,3 +1,35 @@
+# def word_frequency(text):
+#     new={}
+#     for i in text.split():
+#         if i in new:
+#             new[i]+=1
+#         else:
+#             new[i]=1
+#     return new
+# print(word_frequency("Python is great and Python is easy"))
+
+# def group_anagrams(words):
+#     new=[]
+#     for i in words:
+#         for j in new:
+#             if sorted(i) == sorted(j[0]):
+#                 j.append(i)
+#                 break
+#         else:
+#             new.append([i])
+#     return new
+# print(group_anagrams(["eat", "tea", "tan", "ate", "nat", "bat"]))
+
+# a=[1, [2, [3, 4], 5], 6, [7, 8]]
+# new=[]
+# for i in a:
+#     for j in i:
+#         print(j)
+
+
+
+
+
 def sum_digits(n):
     if n == 0:
         return 0
