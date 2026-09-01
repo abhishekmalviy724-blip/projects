@@ -1,3 +1,48 @@
+balance = 5000
+pin = 1234
+
+user_pin = int(input("PIN enter karo: "))
+
+if user_pin == pin:
+    print("\n1. Balance Check")
+    print("2. Deposit")
+    print("3. Withdraw")
+
+    choice = int(input("\nApna choice select karo: "))
+
+    if choice == 1:
+        print("Your balance is ₹", balance)
+
+    elif choice == 2:
+        amount = float(input("Deposit amount: ₹"))
+
+        if amount > 0:
+            balance += amount
+            print("Deposit successful!")
+            print("New balance: ₹", balance)
+        else:
+            print("Invalid amount!")
+
+    elif choice == 3:
+        amount = float(input("Withdraw amount: ₹"))
+
+        if amount <= 0:
+            print("Invalid amount!")
+        elif amount > balance:
+            print("Insufficient balance!")
+        else:
+            balance -= amount
+            print("Withdrawal successful!")
+            print("Remaining balance: ₹", balance)
+
+    else:
+        print("Invalid choice!")
+
+else:
+    print("❌ Wrong PIN!")
+
+
+
 # def word_frequency(text):
 #     new={}
 #     for i in text.split():
