@@ -1,3 +1,23 @@
+password = input("Enter your password: ")
+
+if len(password) < 6:
+    print("Weak Password ❌")
+
+elif len(password) >= 8:
+    if any(char.isdigit() for char in password):
+        if any(char.isupper() for char in password):
+            print("Strong Password 💪")
+        else:
+            print("Medium Password ⚠️")
+    else:
+        print("Medium Password ⚠️")
+
+else:
+    print("Medium Password ⚠️")
+
+
+
+
 balance = 5000
 pin = 1234
 
