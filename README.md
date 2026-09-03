@@ -1,19 +1,44 @@
+marks = []
+
+for i in range(5):
+    mark = float(input(f"Subject {i+1} ke marks enter karo: "))
+    marks.append(mark)
+
+total = sum(marks)
+percentage = total / 5
+
+print("\nTotal Marks:", total)
+print("Percentage:", percentage)
+
+if percentage >= 90:
+    print("Grade: A+")
+elif percentage >= 75:
+    print("Grade: A")
+elif percentage >= 60:
+    print("Grade: B")
+elif percentage >= 40:
+    print("Grade: C")
+else:
+    print("Grade: Fail")
+
+
+
 password = input("Enter your password: ")
 
 if len(password) < 6:
-    print("Weak Password ❌")
+    print("Weak Password ")
 
 elif len(password) >= 8:
     if any(char.isdigit() for char in password):
         if any(char.isupper() for char in password):
-            print("Strong Password 💪")
+            print("Strong Password ")
         else:
-            print("Medium Password ⚠️")
+            print("Medium Password ")
     else:
-        print("Medium Password ⚠️")
+        print("Medium Password ")
 
 else:
-    print("Medium Password ⚠️")
+    print("Medium Password ")
 
 
 
@@ -59,7 +84,7 @@ if user_pin == pin:
         print("Invalid choice!")
 
 else:
-    print("❌ Wrong PIN!")
+    print("Wrong PIN!")
 
 
 
