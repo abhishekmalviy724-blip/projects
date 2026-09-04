@@ -1,3 +1,14 @@
+text = input("Enter a word: ")
+
+text = text.lower()
+
+if text == text[::-1]:
+    print("Palindrome hai ✅")
+else:
+    print("Palindrome nahi hai ❌")
+
+
+
 num = int(input("Enter a number: "))
 
 if num > 1:
