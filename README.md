@@ -3,9 +3,9 @@ text = input("Enter a word: ")
 text = text.lower()
 
 if text == text[::-1]:
-    print("Palindrome hai ✅")
+    print("Palindrome hai ")
 else:
-    print("Palindrome nahi hai ❌")
+    print("Palindrome nahi hai ")
 
 
 
