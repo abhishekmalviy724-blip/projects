@@ -1,3 +1,16 @@
+for i in range(5):
+    for j in range(4-i):
+        print(' ',end="")
+    for k in range(2*i+1):
+        print("*",end="")
+    print()
+for l in range(4,0,-1):
+    for h in range(5-l):
+        print(" ",end="")
+    for g in range(2*l-1):
+        print("*",end="")
+    print()
+
 import random
 
 choices = ["rock", "paper", "scissors"]
