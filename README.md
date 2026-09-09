@@ -1,3 +1,26 @@
+score = 0
+
+questions = [
+    ["India ki capital kya hai?", "delhi"],
+    ["Python kisne banaya?", "guido van rossum"],
+    ["2 + 2 kitna hota hai?", "4"]
+]
+
+for question in questions:
+    answer = input(question[0] + " ").lower()
+
+    if answer == question[1]:
+        print("Correct! ")
+        score += 1
+    else:
+        print("Wrong! ")
+        print("Correct answer:", question[1])
+
+print("\nYour Final Score:", score, "/", len(questions))
+
+
+
+
 tasks = []
 
 while True:
