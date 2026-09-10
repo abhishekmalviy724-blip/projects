@@ -1,383 +1,291 @@
-score = 0
+# E-commerce Sales Data Analysis project
 
-questions = [
-    ["India ki capital kya hai?", "delhi"],
-    ["Python kisne banaya?", "guido van rossum"],
-    ["2 + 2 kitna hota hai?", "4"]
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+a = pd.read_csv("ecommerce_sales.csv")
+
+print("FIRST 5 ROWS")
+print(a.head())
+
+print("\nSHAPE")
+print(a.shape)
+
+print("\nCOLUMNS")
+print(a.columns)
+
+print("\nINFO")
+print(a.info())
+
+print("\nSTATISTICS")
+print(a.describe())
+
+print("\nMISSING VALUES")
+print(a.isnull().sum())
+
+print("\nDUPLICATES")
+print(a.duplicated().sum())
+
+a = a.drop_duplicates()
+
+a["Order_Date"] = pd.to_datetime(a["Order_Date"], errors="coerce")
+
+a["Sales"] = pd.to_numeric(a["Sales"], errors="coerce")
+a["Profit"] = pd.to_numeric(a["Profit"], errors="coerce")
+a["Quantity"] = pd.to_numeric(a["Quantity"], errors="coerce")
+a["Unit_Price"] = pd.to_numeric(a["Unit_Price"], errors="coerce")
+a["Discount"] = pd.to_numeric(a["Discount"], errors="coerce")
+
+a["Sales"] = a["Sales"].fillna(a["Sales"].median())
+a["Profit"] = a["Profit"].fillna(a["Profit"].median())
+a["Quantity"] = a["Quantity"].fillna(a["Quantity"].median())
+
+a = a.dropna(subset=["Order_ID", "Order_Date", "Category", "Product"])
+
+a["Month"] = a["Order_Date"].dt.month
+a["Month_Name"] = a["Order_Date"].dt.strftime("%B")
+a["Year"] = a["Order_Date"].dt.year
+
+a["Profit_Margin"] = (a["Profit"] / a["Sales"]) * 100
+a["Revenue_per_Unit"] = a["Sales"] / a["Quantity"]
+
+total_sales = a["Sales"].sum()
+total_profit = a["Profit"].sum()
+total_orders = a["Order_ID"].nunique()
+total_quantity = a["Quantity"].sum()
+
+average_order_value = total_sales / total_orders
+profit_margin = (total_profit / total_sales) * 100
+
+print("\nTOTAL SALES:", total_sales)
+print("TOTAL PROFIT:", total_profit)
+print("TOTAL ORDERS:", total_orders)
+print("TOTAL QUANTITY:", total_quantity)
+print("AVERAGE ORDER VALUE:", average_order_value)
+print("PROFIT MARGIN:", profit_margin)
+
+category_sales = (
+    a.groupby("Category")["Sales"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+category_profit = (
+    a.groupby("Category")["Profit"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+category_quantity = (
+    a.groupby("Category")["Quantity"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+print("\nSALES BY CATEGORY")
+print(category_sales)
+
+print("\nPROFIT BY CATEGORY")
+print(category_profit)
+
+print("\nQUANTITY BY CATEGORY")
+print(category_quantity)
+
+top_products = (
+    a.groupby("Product")["Sales"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+top_profit_products = (
+    a.groupby("Product")["Profit"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+most_sold = (
+    a.groupby("Product")["Quantity"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+print("\nTOP 10 PRODUCTS BY SALES")
+print(top_products)
+
+print("\nTOP 10 PRODUCTS BY PROFIT")
+print(top_profit_products)
+
+print("\nTOP 10 MOST SOLD PRODUCTS")
+print(most_sold)
+
+state_sales = (
+    a.groupby("State")["Sales"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+city_sales = (
+    a.groupby("City")["Sales"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+print("\nSTATE-WISE SALES")
+print(state_sales)
+
+print("\nTOP 10 CITIES")
+print(city_sales)
+
+top_customers = (
+    a.groupby("Customer_ID")["Sales"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+customer_orders = (
+    a.groupby("Customer_ID")["Order_ID"]
+    .nunique()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+print("\nTOP CUSTOMERS")
+print(top_customers)
+
+print("\nCUSTOMERS BY NUMBER OF ORDERS")
+print(customer_orders)
+
+monthly_sales = (
+    a.groupby(a["Order_Date"].dt.to_period("M"))["Sales"]
+    .sum()
+)
+
+monthly_profit = (
+    a.groupby(a["Order_Date"].dt.to_period("M"))["Profit"]
+    .sum()
+)
+
+print("\nMONTHLY SALES")
+print(monthly_sales)
+
+print("\nMONTHLY PROFIT")
+print(monthly_profit)
+
+payment_sales = (
+    a.groupby("Payment_Mode")["Sales"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+print("\nPAYMENT MODE SALES")
+print(payment_sales)
+
+plt.figure(figsize=(8,5))
+sns.barplot(x=category_sales.index, y=category_sales.values)
+plt.title("Sales by Category")
+plt.xlabel("Category")
+plt.ylabel("Sales")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(8,5))
+sns.barplot(x=category_profit.index, y=category_profit.values)
+plt.title("Profit by Category")
+plt.xlabel("Category")
+plt.ylabel("Profit")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10,5))
+plt.plot(monthly_sales.index.astype(str), monthly_sales.values, marker="o")
+plt.title("Monthly Sales Trend")
+plt.xlabel("Month")
+plt.ylabel("Sales")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10,6))
+sns.barplot(x=top_products.values, y=top_products.index)
+plt.title("Top 10 Products by Sales")
+plt.xlabel("Sales")
+plt.ylabel("Product")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(7,7))
+plt.pie(
+    payment_sales.values,
+    labels=payment_sales.index,
+    autopct="%1.1f%%"
+)
+plt.title("Sales by Payment Mode")
+plt.show()
+
+plt.figure(figsize=(8,5))
+sns.scatterplot(
+    data=a,
+    x="Discount",
+    y="Profit"
+)
+plt.title("Discount vs Profit")
+plt.xlabel("Discount")
+plt.ylabel("Profit")
+plt.show()
+
+plt.figure(figsize=(8,5))
+sns.scatterplot(
+    data=a,
+    x="Sales",
+    y="Profit"
+)
+plt.title("Sales vs Profit")
+plt.xlabel("Sales")
+plt.ylabel("Profit")
+plt.show()
+
+numeric_columns = [
+    "Quantity",
+    "Unit_Price",
+    "Discount",
+    "Sales",
+    "Profit",
+    "Profit_Margin"
 ]
 
-for question in questions:
-    answer = input(question[0] + " ").lower()
-
-    if answer == question[1]:
-        print("Correct! ")
-        score += 1
-    else:
-        print("Wrong! ")
-        print("Correct answer:", question[1])
-
-print("\nYour Final Score:", score, "/", len(questions))
-
-
-
-
-tasks = []
-
-while True:
-    print("\n1. Add Task")
-    print("2. View Tasks")
-    print("3. Exit")
-
-    choice = input("Enter your choice: ")
-
-    if choice == "1":
-        task = input("Enter task: ")
-        tasks.append(task)
-        print("Task added successfully!")
-
-    elif choice == "2":
-        if len(tasks) == 0:
-            print("No tasks available!")
-        else:
-            print("\nYour Tasks:")
-            for i in range(len(tasks)):
-                print(i + 1, ".", tasks[i])
-
-    elif choice == "3":
-        print("Goodbye!")
-        break
-
-    else:
-        print("Invalid choice!")
-
-
-
-
-for i in range(5):
-    for j in range(4-i):
-        print(' ',end="")
-    for k in range(2*i+1):
-        print("*",end="")
-    print()
-for l in range(4,0,-1):
-    for h in range(5-l):
-        print(" ",end="")
-    for g in range(2*l-1):
-        print("*",end="")
-    print()
-
-import random
-
-choices = ["rock", "paper", "scissors"]
-
-user = input("Choose Rock, Paper, or Scissors: ").lower()
-computer = random.choice(choices)
-
-print("Computer chose:", computer)
-
-if user == computer:
-    print("It's a Draw!")
-elif (user == "rock" and computer == "scissors") or \
-     (user == "paper" and computer == "rock") or \
-     (user == "scissors" and computer == "paper"):
-    print("You Win! ")
-else:
-    print("Computer Wins! ")
-
-
-
-
-
-text = input("Enter a word: ")
-
-text = text.lower()
-
-if text == text[::-1]:
-    print("Palindrome hai ")
-else:
-    print("Palindrome nahi hai ")
-
-
-
-num = int(input("Enter a number: "))
-
-if num > 1:
-    for i in range(2, num):
-        if num % i == 0:
-            print(num, "is not a Prime Number")
-            break
-    else:
-        print(num, "is a Prime Number")
-else:
-    print("Prime number nahi hai")
-
-
-
-
-marks = []
-
-for i in range(5):
-    mark = float(input(f"Subject {i+1} ke marks enter karo: "))
-    marks.append(mark)
-
-total = sum(marks)
-percentage = total / 5
-
-print("\nTotal Marks:", total)
-print("Percentage:", percentage)
-
-if percentage >= 90:
-    print("Grade: A+")
-elif percentage >= 75:
-    print("Grade: A")
-elif percentage >= 60:
-    print("Grade: B")
-elif percentage >= 40:
-    print("Grade: C")
-else:
-    print("Grade: Fail")
-
-
-
-password = input("Enter your password: ")
-
-if len(password) < 6:
-    print("Weak Password ")
-
-elif len(password) >= 8:
-    if any(char.isdigit() for char in password):
-        if any(char.isupper() for char in password):
-            print("Strong Password ")
-        else:
-            print("Medium Password ")
-    else:
-        print("Medium Password ")
-
-else:
-    print("Medium Password ")
-
-
-
-
-balance = 5000
-pin = 1234
-
-user_pin = int(input("PIN enter karo: "))
-
-if user_pin == pin:
-    print("\n1. Balance Check")
-    print("2. Deposit")
-    print("3. Withdraw")
-
-    choice = int(input("\nApna choice select karo: "))
-
-    if choice == 1:
-        print("Your balance is ₹", balance)
-
-    elif choice == 2:
-        amount = float(input("Deposit amount: ₹"))
-
-        if amount > 0:
-            balance += amount
-            print("Deposit successful!")
-            print("New balance: ₹", balance)
-        else:
-            print("Invalid amount!")
-
-    elif choice == 3:
-        amount = float(input("Withdraw amount: ₹"))
-
-        if amount <= 0:
-            print("Invalid amount!")
-        elif amount > balance:
-            print("Insufficient balance!")
-        else:
-            balance -= amount
-            print("Withdrawal successful!")
-            print("Remaining balance: ₹", balance)
-
-    else:
-        print("Invalid choice!")
-
-else:
-    print("Wrong PIN!")
-
-
-
-# def word_frequency(text):
-#     new={}
-#     for i in text.split():
-#         if i in new:
-#             new[i]+=1
-#         else:
-#             new[i]=1
-#     return new
-# print(word_frequency("Python is great and Python is easy"))
-
-# def group_anagrams(words):
-#     new=[]
-#     for i in words:
-#         for j in new:
-#             if sorted(i) == sorted(j[0]):
-#                 j.append(i)
-#                 break
-#         else:
-#             new.append([i])
-#     return new
-# print(group_anagrams(["eat", "tea", "tan", "ate", "nat", "bat"]))
-
-# a=[1, [2, [3, 4], 5], 6, [7, 8]]
-# new=[]
-# for i in a:
-#     for j in i:
-#         print(j)
-
-
-
-
-
-def sum_digits(n):
-    if n == 0:
-        return 0
-    return n % 10 + sum_digits(n // 10)
-
-num = int(input("Enter number: "))
-
-print("Sum of digits:", sum_digits(num))
-
-
-
-text = input("Enter a sentence: ")
-
-words = text.lower().split()
-longest = ""
-
-for word in words:
-    if len(word) > len(longest):
-        longest = word
-
-print("Longest word:", longest)
-print("Length:", len(longest))
-
-
-numbers = list(map(int, input("Enter numbers: ").split()))
-
-duplicates = []
-
-for i in range(len(numbers)):
-    count = 0
-
-    for j in range(len(numbers)):
-        if numbers[i] == numbers[j]:
-            count += 1
-
-    if count > 1 and numbers[i] not in duplicates:
-        duplicates.append(numbers[i])
-
-print("Duplicate numbers:", duplicates)
-
-
-
-def LMS(Book,User_Name,User_Id,Status):
-    Books = ["Python", "SQL", "Machine Learning", "Excel"]
-    Boosk = {"B101" :{
-        "Name":"python",
-        "Author":"Gito",
-        "status":"Av"
-    }}
-    User = {"Abhishek","Rahul","Sanvi","Mahi"}
-    Category = {"programming","Database","AI","PHP"}
-    Library_config = ("Central Library", 5)
-    while True:
-        print("\n1. Book")
-        print("2. User Name")
-        print("3. User ID") 
-        print("4. Status")
-        print("5. Exit")
-        
-        choice = int(input("Enter Choice!"))
-        if choice == 1:
-                print (Book)
-        elif choice == 2:
-                print(User_Name)
-        elif choice == 3:
-                print(User_Id)
-        elif choice == 4:
-                print(Status)
-        elif choice == 5:
-            print("Thank You!")
-            break
-        else:
-            print("Invalid Choice")
-    
-        
-obj=LMS(["A","B",""],"Abhihek","763URYB","Active")
-
-
-
-
-
-
-numbers = list(map(int, input("Enter numbers: ").split()))
-
-for i in range(len(numbers)):
-    count = 0
-
-    for j in range(len(numbers)):
-        if numbers[i] == numbers[j]:
-            count += 1
-
-    if count == 1:
-        print("First unique number:", numbers[i])
-        break
-
-
-
-numbers = list(map(int, input("Enter numbers: ").split()))
-
-for i in range(len(numbers)):
-    for j in range(i + 1, len(numbers)):
-        if numbers[i] > numbers[j]:
-            numbers[i], numbers[j] = numbers[j], numbers[i]
-
-print("Sorted numbers:", numbers)
-
-
-
-text = input("Enter a word: ")
-
-frequency = {}
-
-for char in text:
-    frequency[char] = frequency.get(char, 0) + 1
-
-for char, count in frequency.items():
-    print(char, ":", count)
-
-
-
-
-def largest_word(sentence):
-    words = sentence.split()
-    largest = words[0]
-
-    for word in words:
-        if len(word) > len(largest):
-            largest = word
-
-    return largest
-
-text = input("Enter sentence: ")
-
-print("Largest word:", largest_word(text))
-
-
-
-# def find_missing(numbers):
-    n = len(numbers) + 1
-    expected = n * (n + 1) // 2
-    return expected - sum(numbers)
-
-numbers = list(map(int, input("Enter numbers: ").split()))
-
-print("Missing number:", find_missing(numbers))
+correlation = a[numeric_columns].corr()
+
+print("\nCORRELATION")
+print(correlation)
+
+plt.figure(figsize=(9,6))
+sns.heatmap(
+    correlation,
+    annot=True,
+    cmap="coolwarm"
+)
+plt.title("Correlation Heatmap")
+plt.tight_layout()
+plt.show()
+
+best_category = category_sales.idxmax()
+best_profit_category = category_profit.idxmax()
+best_product = top_products.idxmax()
+best_state = state_sales.idxmax()
+best_payment = payment_sales.idxmax()
+
+print("\nBUSINESS INSIGHTS")
+print("Best Selling Category:", best_category)
+print("Most Profitable Category:", best_profit_category)
+print("Best Selling Product:", best_product)
+print("Top State:", best_state)
+print("Most Used Payment Mode:", best_payment)
